@@ -1,0 +1,31 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © willyvel
+//@version=5
+
+//Finding the ZERO
+
+indicator("Finding Zero", overlay=true)
+
+startbarInput = input.int(15, "Start bar lookback", minval = 1, maxval = 4999)
+startbarn = last_bar_index - startbarInput
+
+int zeroBar = 0
+float zeroValue = 0.0000
+
+var label startbarLabel     = label.new(na, na, na, style = label.style_label_up, color = color.white)
+var label lbl               = label.new(na, na, na, style = label.style_label_left, color = color.white)
+var label lowestbarLabel    = label.new(na, na, na, style = label.style_label_up, color = color.yellow)
+
+zeroValue := ta.lowest(startbarInput)
+zeroBar := ta.lowestbars(startbarInput) //incorrect!!!
+
+if bar_index == last_bar_index - startbarInput //putting label on the StartBar
+    label.set_xy(startbarLabel, bar_index, low)
+    label.set_text(startbarLabel, str.tostring(bar_index, "START\n#\n") + str.tostring(zeroBar, "# zero bar\n"))
+    
+if bar_index == zeroBar
+    label.set_xy(lowestbarLabel, bar_index, low)
+    label.set_text(lowestbarLabel, str.tostring(zeroBar, "# zero bar\n") + str.tostring(zeroValue, "#.## zero value"))
+
+label.set_xy(lbl, last_bar_index, low)
+label.set_text(lbl, str.tostring(zeroBar, "# zero bar\n") + str.tostring(zeroValue, "#.## zero value\n") + str.tostring(startbarn, "# start bar"))
